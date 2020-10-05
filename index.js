@@ -15,7 +15,6 @@ app.get("/", (req, res) =>{
     res.send("hello! its working.")
 })
 
-
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 client.connect(err => {
   const eventsCollection = client.db("volunteerEvents").collection("events");
@@ -25,7 +24,7 @@ client.connect(err => {
       const events = req.body;
       eventsCollection.insertMany(events)
       .then(result => {
-        //   console.log(result.insertedCount);
+          console.log(result.insertedCount);
           res.send(result.insertedCount)
       })
   })
@@ -47,17 +46,18 @@ client.connect(err => {
         const registeredEvent = req.body;
         registeredEventsCollection.insertOne(registeredEvent)
         .then(result => {
-            // console.log(result.insertedCount);
+            
             res.send(result.insertedCount>0)
         })
     })
 
-    // app.get("/showRegisteredEvents", (req, res) => {
-    //     registeredEventsCollection.find({})
-    //     .toArray((err, documents) => {
-    //         res.send(documents);
-    //     })
-    // })
+    app.get("/showAllRegisteredEvents", (req, res) => {
+        registeredEventsCollection.find({})
+        .toArray((err, documents) => {
+            
+            res.send(documents);
+        })
+    })
 
     app.get("/showRegisteredEvents", (req, res) => {
         registeredEventsCollection.find({email: req.query.email})
