@@ -24,10 +24,18 @@ client.connect(err => {
       const events = req.body;
       eventsCollection.insertMany(events)
       .then(result => {
-          console.log(result.insertedCount);
           res.send(result.insertedCount)
       })
   })
+
+  app.post("/addSingleEvent", (req, res) => {
+    const event = req.body;
+    eventsCollection.insertOne(event)
+    .then(result => {
+        console.log(result.insertedCount);
+        res.send(result.insertedCount > 0)
+    })
+})
   app.get("/events", (req, res) => {
         eventsCollection.find({})
         .toArray((err, documents) => {
@@ -45,16 +53,14 @@ client.connect(err => {
     app.post("/addRegisteredEvent", (req, res) => {
         const registeredEvent = req.body;
         registeredEventsCollection.insertOne(registeredEvent)
-        .then(result => {
-            
+        .then(result => {   
             res.send(result.insertedCount>0)
         })
     })
 
     app.get("/showAllRegisteredEvents", (req, res) => {
         registeredEventsCollection.find({})
-        .toArray((err, documents) => {
-            
+        .toArray((err, documents) => { 
             res.send(documents);
         })
     })
@@ -72,7 +78,6 @@ client.connect(err => {
             res.send(result.deletedCount > 0)
         })
     })
-
 });
 
 
